@@ -1,35 +1,70 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+type CoursePart = {
+  name: string,
+  exerciseCount: number
+};
 
-function App() {
-  const [count, setCount] = useState(0)
+interface HeaderProps {
+  name: string;
+};
 
+interface ContentProps {
+  parts: CoursePart[]
+};
+
+interface TotalProps {
+  total: number;
+};
+
+const Header = (props: HeaderProps) => {
+  return (
+    <h1>{props.name}</h1>
+  );
+};
+
+const Content = (props: ContentProps) => {
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <p>{props.parts[0].name} {props.parts[0].exerciseCount}</p>
+      <p>{props.parts[1].name} {props.parts[1].exerciseCount}</p>
+      <p>{props.parts[2].name} {props.parts[2].exerciseCount}</p>
     </>
-  )
-}
+  );
+};
 
-export default App
+const Total = (props: TotalProps) => {
+  return (
+    <p>
+      Number of exercises {props.total}
+    </p>
+  );
+};
+
+const App = () => {
+  const courseName = 'Half Stack application development';
+  const courseParts = [
+    {
+      name: 'Fundamentals',
+      exerciseCount: 10
+    },
+    {
+      name: 'Usin props to pass data',
+      exerciseCount: 7
+    },
+    {
+      name: 'Deeper type usage',
+      exerciseCount: 14
+    }
+  ];
+
+  const totalExercises = courseParts.reduce((sum, part) => sum + part.exerciseCount, 0);
+
+  return (
+    <div>
+      <Header name={courseName} />
+      <Content parts={courseParts} />
+      <Total total={totalExercises} />
+    </div>
+  );
+};
+
+export default App;
