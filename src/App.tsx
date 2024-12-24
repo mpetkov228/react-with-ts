@@ -1,7 +1,26 @@
-type CoursePart = {
-  name: string,
-  exerciseCount: number
+interface CoursePartBasic {
+  name: string;
+  exerciseCount: number;
+  description: string;
+  kind: "basic";
 };
+
+interface CoursePartGroup {
+  name: string;
+  exerciseCount: number;
+  groupProjectCount: number;
+  kind: "group";
+};
+
+interface CoursePartBackground {
+  name: string;
+  exerciseCount: number;
+  description: string;
+  backgroundMaterial: string;
+  kind: "background";
+};
+
+type CoursePart = CoursePartBasic | CoursePartGroup | CoursePartBackground;
 
 interface HeaderProps {
   name: string;
@@ -41,19 +60,32 @@ const Total = (props: TotalProps) => {
 
 const App = () => {
   const courseName = 'Half Stack application development';
-  const courseParts = [
+  const courseParts: CoursePart[] = [
     {
       name: 'Fundamentals',
-      exerciseCount: 10
+      exerciseCount: 10,
+      description: 'This is an awesome course part',
+      kind: 'basic'
     },
     {
       name: 'Usin props to pass data',
-      exerciseCount: 7
+      exerciseCount: 7,
+      groupProjectCount: 3,
+      kind: 'group'
+    },
+    {
+      name: 'Basics of type narrowing',
+      exerciseCount: 7,
+      description: 'How to go from unknown to string',
+      kind: 'basic'
     },
     {
       name: 'Deeper type usage',
-      exerciseCount: 14
-    }
+      exerciseCount: 14,
+      description: 'Confusing description',
+      backgroundMaterial: 'https://type-level-typescript.com/template-literal-types',
+      kind: 'background'
+    },
   ];
 
   const totalExercises = courseParts.reduce((sum, part) => sum + part.exerciseCount, 0);
