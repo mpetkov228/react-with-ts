@@ -1,26 +1,31 @@
-interface CoursePartBasic {
+interface CoursePartBase {
   name: string;
   exerciseCount: number;
+};
+
+interface CoursePartDescription extends CoursePartBase {
   description: string;
+};
+
+interface CoursePartBasic extends CoursePartDescription {
   kind: "basic";
 };
 
-interface CoursePartGroup {
-  name: string;
-  exerciseCount: number;
+interface CoursePartGroup extends CoursePartBase {
   groupProjectCount: number;
   kind: "group";
 };
 
-interface CoursePartBackground {
-  name: string;
-  exerciseCount: number;
-  description: string;
+interface CoursePartBackground extends CoursePartDescription {
   backgroundMaterial: string;
   kind: "background";
 };
 
 type CoursePart = CoursePartBasic | CoursePartGroup | CoursePartBackground;
+
+interface PartProps {
+  part: CoursePart;
+};
 
 interface HeaderProps {
   name: string;
@@ -34,6 +39,35 @@ interface TotalProps {
   total: number;
 };
 
+const Part = (props: PartProps) => {
+  switch (props.part.kind) {
+    case 'basic':
+      return (
+        <div>
+          <h3>{props.part.name} {props.part.exerciseCount}</h3>
+          <p><em>{props.part.description}</em></p>
+        </div>
+      );
+    case 'group':
+      return (
+        <div>
+          <h3>{props.part.name} {props.part.exerciseCount}</h3>
+          <p>project exercises {props.part.groupProjectCount}</p>
+        </div>
+      );
+    case 'background':
+      return (
+        <div>
+          <h3>{props.part.name} {props.part.exerciseCount}</h3>
+          <p><em>{props.part.description}</em></p>
+          <p>submit to {props.part.backgroundMaterial}</p>
+        </div>
+      );
+    default:
+      return null;
+  }
+};
+
 const Header = (props: HeaderProps) => {
   return (
     <h1>{props.name}</h1>
@@ -43,9 +77,7 @@ const Header = (props: HeaderProps) => {
 const Content = (props: ContentProps) => {
   return (
     <>
-      <p>{props.parts[0].name} {props.parts[0].exerciseCount}</p>
-      <p>{props.parts[1].name} {props.parts[1].exerciseCount}</p>
-      <p>{props.parts[2].name} {props.parts[2].exerciseCount}</p>
+      {props.parts.map(part => <Part part={part} />)}
     </>
   );
 };
@@ -86,6 +118,12 @@ const App = () => {
       backgroundMaterial: 'https://type-level-typescript.com/template-literal-types',
       kind: 'background'
     },
+    {
+      name: 'TypeScriot in the frontend',
+      exerciseCount: 10,
+      description: 'a hard part',
+      kind: 'basic'
+    }
   ];
 
   const totalExercises = courseParts.reduce((sum, part) => sum + part.exerciseCount, 0);
